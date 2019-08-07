@@ -1,0 +1,77 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @event.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @event.description %>
+</p>
+
+<!-- <p>
+  <strong>Image:</strong>
+  <%= @event.image %>
+</p>
+ -->
+<p>
+  <strong>City:</strong>
+  <%= @event.city %>
+</p>
+<p>
+  <strong>State:</strong>
+  <%= @event.state %>
+</p>
+<p>
+  <strong>Zip_code:</strong>
+  <%= @event.zip_code %>
+</p>
+<p>
+  <strong>Country:</strong>
+  <%= @event.country %>
+</p>
+<p>
+  <strong>Start_date:</strong>
+  <%= @event.start_date %>
+</p>
+<p>
+  <strong>End_date:</strong>
+  <%= @event.end_date %>
+</p>
+<% if @event.address.present? %>
+ <p>
+   <strong>Address:</strong>
+   <%= @event.address %>
+   <div id="map"></div>
+ </p>
+<% else %>
+<% end %>
+<%= link_to 'Edit', edit_event_path(@event) %> |
+<%= link_to 'Back', events_path %>
+
+<style>
+   #map {
+    height: 400px;
+    width: 100%;
+   }
+</style>
+  <script>
+    function initMap() {
+     var lat1 = <%= @event.latitude %>;
+     var long1 = <%= @event.longitude %>;
+      var uluru = {lat: lat1, lng: long1};
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: uluru
+      });
+      var marker = new google.maps.Marker({
+        position: uluru,
+        map: map
+      });
+    }
+    
+    
+  </script>
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvuPSxdugPS2FJQibo-i78wVZHWgmKemk&callback=initMap"></script>
