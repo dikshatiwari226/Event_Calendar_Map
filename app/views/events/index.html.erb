@@ -5,42 +5,41 @@
 <p id="notice"><%= notice %></p>
 <div class="row">
   <h1>Events</h1>
-  <%= form_tag "/events", :method=>"get" do %>
-    <%= text_field_tag :search, nil, :placeholder=>"search event" %>
-    <%= submit_tag "search"%>
-  <% end %>
+    <%= form_tag "/events", :method=>"get" do %>
+      <%= text_field_tag :search, nil, :placeholder=>"search event" %>
+      <%= submit_tag "search"%>
+    <% end %>
   <h1>Categories</h1>
-  <%= select_tag "Select", options_from_collection_for_select( @categories, "id", "category_name"), class: "my_filter form-control select_subcategory",style: "" %>
+    <%= select_tag "Select", options_from_collection_for_select( @categories, "id", "category_name"), class: "my_filter form-control select_subcategory",style: "" %>
 </div>
+<!--   Show events on table -->
 <div class="table-responsive">
 <table class="table table-hover">
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Address</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Zip_code</th>
+        <th>Country</th>
+        <th>Start_date</th>
+        <th>End_date</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Image</th>
-      <th>Address</th>
-      <th>Latitude</th>
-      <th>Longitude</th>
-      <th>City</th>
-      <th>State</th>
-      <th>Zip_code</th>
-      <th>Country</th>
-      <th>Start_date</th>
-      <th>End_date</th>
-
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @events.each do |event| %>
+    <tbody>
+          <% @events.each do |event| %>
       <tr>
         <td><%= event.title %></td>
         <td><%= event.description %></td>
-        <td><%= event.image %></td>
+        <td><%= event.category.try(:category_name) %></td>
         <td><%= event.address %></td>
         <td><%= event.latitude %></td>
         <td><%= event.longitude %></td>
@@ -54,20 +53,21 @@
         <td><%= link_to 'Edit', edit_event_path(event), :class=>"btn btn-warning" %></td>
         <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' }, :class=>"btn btn-danger" %></td>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-
+          <% end %>
+    </tbody>
+  </table>
 <br>
+
+<!--  Map Container  -->
+
 <div class="container">
   <div id="map"  style="width: 96%; height: 400px; text-align: center;" ></div>
-
 </div>
 <br><br>
 
-<!-- Show All Events  -->
-
-<div class="text-center"><h3>All events</h3></div>
+<!-- Show All Events %> -->
+  
+<div class="text-center"><h3> events</h3></div>
 <% @events.each do |event| %>
   <div class="container newwidth">
     <div class="wrapper">
@@ -84,12 +84,12 @@
     </div>
   </div>
 <% end %>
-<%#= will_paginate @events %> 
 <center>
   <%= will_paginate @events, :renderer=> BootstrapPagination::Rails, previous_label: "Older", next_label: "Newer", inner_window: 1, outer_window: 0 %>
 </center>
 
 <!-- Show Upcoming events -->
+
 <div class="text-center"><h3>Upcoming events</h3></div>
 <% @upcoming_events.each do |upcomingevent| %>
   <div class="container newwidth">
@@ -111,7 +111,7 @@
   <%= will_paginate @upcoming_events, :renderer=> BootstrapPagination::Rails, previous_label: "Older", next_label: "Newer", inner_window: 1, outer_window: 0 %>
 </center>
 
-<!-- Show Expired events -->
+<!-- Expired Events -->
 
 <div class="text-center"><h3>Expired events</h3></div>
 <% @expired_events.each do |expiredevent| %>
@@ -134,31 +134,8 @@
   <%= will_paginate @expired_events, :renderer=> BootstrapPagination::Rails, previous_label: "Older", next_label: "Newer", inner_window: 1, outer_window: 0 %>
 </center>
 
+<!--  Category filter  -->
 
-
- <!-- <section>
-    <div class="h-100">
-      <div class="row h-100 justify-content-center align-items-center">
-        <div class="col-10">
-          <h3 align="center">Upcoming Events</h3>
-          <%# @events.all.each do |event|%>
-            <div class="card" style="width: 18rem;">
-              <div class="card-body">
-                <h5 class="card-title"><%#= event.title %></h5>
-                <p class="card-text"><%#= event.address %></p>
-                <p class="card-text"><%#= event.start_date %></p>
-                <p class="card-text"><%#= event.end_date %></p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-            <%# end %>
-        </div>   
-      </div>
-    </div> <br> 
-    <div class= "digg_pagination row h-100 justify-content-center align-items-center">
-      <%#= will_paginate @events, :renderer=> BootstrapPagination::Rails, previous_label: "Older", next_label: "Newer", inner_window: 1, outer_window: 0 %> 
-    </div> 
-  </section> -->
 <script type="text/javascript">
   $(function(){
     $('select.my_filter').on('change', function(){
@@ -169,38 +146,39 @@
   })
 </script>
 
-    
-
+<!-- Map show with locations -->
 
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAvuPSxdugPS2FJQibo-i78wVZHWgmKemk&libraries=places"></script>
-<script>$(document).ready(function(){
-  // var locations =  [["cdcdc","25.902391","78.570356"],["new title","42.838148","-80.473317"],["dada","25.902391","78.570356"],["dadasd a d","25.720813","76.19997"],["DElhi","26.106121","78.271666"],["Gwalior","26.106121","78.271666"],["new title","25.902391","78.570356"],["title1","42.838148","-80.473317"],["new title","28.626726","77.304831"]];
+<script>
+  $(document).ready(function()
+  {
+    // var locations =  [["cdcdc","25.902391","78.570356"],["new title","42.838148","-80.473317"],["dada","25.902391","78.570356"],["dadasd a d","25.720813","76.19997"],["DElhi","26.106121","78.271666"],["Gwalior","26.106121","78.271666"],["new title","25.902391","78.570356"],["title1","42.838148","-80.473317"],["new title","28.626726","77.304831"]];
 
-  var locations = <%= raw @map_data.to_json %>;
-  console.log("Data", locations)
+    var locations = <%= raw @map_data.to_json %>;
+    console.log("Data", locations)
 
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 8,
-    center: new google.maps.LatLng(<%= @map_data.first[1] %>, <%= @map_data.first[2] %>),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  });
-  var infowindow = new google.maps.InfoWindow();
-  var marker, i;
-  for (i = 0; i < locations.length; i++) {
-    marker = new google.maps.Marker({
-      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-      map: map
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 8,
+      center: new google.maps.LatLng(<%= @map_data.first[1] %>, <%= @map_data.first[2] %>),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
     });
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i;
+    for (i = 0; i < locations.length; i++) {
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
 
-     $("#loc").val(locations[i][0]);
-    google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
-      return function() {
-        var Content = '<div class="card-body">' + '<h3 class="card-title">' + locations[i][0]+ '</h3>' + " " + '<div class="card-text">'+ locations [i][3] + " " + locations[i][4] + '</div>' + '</div>' + '<br>' + '<a href="#" class="btn btn-primary">' + 'More info</a>'
-        infowindow.setContent(Content);
-        infowindow.open(map, marker);
-      }
-    })(marker, i));
-  }
+      $("#loc").val(locations[i][0]);
+        google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+        return function() {
+        var Content = '<div class="card-body">' + '<h3 class="card-title">' + locations[i][0]+ '</h3>' + " " + '<div class="card-text">'+ locations [i][3] + " " + locations[i][4] + '</div>' + '</div>' + '<br>' + '<a href=" /events/' + locations[i][6] + '/allevent_details", class="btn btn-primary">More info</a>'
+              infowindow.setContent(Content);
+              infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
   });
 </script>
 
@@ -208,45 +186,41 @@
 body {
   margin: 40px;
 }
-    .wrapper {
-        display: grid;
-    grid-gap: 10px;
-        grid-template-columns: repeat(4, [col] 150px ) ;
-        grid-template-rows: repeat(2, [row] auto  );
-        background-color: #fff;
-        color: #444;
+  .wrapper {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: repeat(4, [col] 150px ) ;
+      grid-template-rows: repeat(2, [row] auto  );
+      background-color: #fff;
+      color: #444;
     }
 
-    .box {
-        background-color: silver;
-        color: #fff;
-        border-radius: 5px;
-        padding: 20px;
-        font-size: 150%;
-
+  .box {
+      background-color: silver;
+      color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      font-size: 150%;
     }
 
-    .box .box {
-        background-color: #ccc;
-        color: #444;
+  .box .box {
+      background-color: #ccc;
+      color: #444;
+    }
+  .c {
+      grid-column: col / span 2;
+      grid-row: row 2;
     }
 
-   
-    .c {
-        grid-column: col / span 2;
-        grid-row: row 2;
+  .d{
+      grid-column: col 3 / span 2;
+      grid-row: row 2;
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 1fr 1fr;
     }
-
-    .d{
-        grid-column: col 3 / span 2;
-        grid-row: row 2;
-        display: grid;
-    grid-gap: 10px;
-        grid-template-columns: 1fr 1fr;
-    }
-    .newwidth
+  .newwidth
     {
       width: 50% !important;
     }
-   
 </style>

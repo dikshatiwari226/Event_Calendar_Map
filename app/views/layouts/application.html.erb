@@ -2,11 +2,11 @@
 <html>
   <head>
     <title>EventProject</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+      <%= csrf_meta_tags %>
+      <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+      <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+      <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
@@ -61,52 +61,55 @@
         height: 20px;
         margin-bottom: 2px;
       }
-      html {
-  height: 100%;
-}
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-.container {
-  width: 100%;
-  display: flex;
-}
-#map-canvas-left, #map-canvas-right {
-  height: 250px;
-  width: 550px;
-}
-#iw_container .iw_title {
-  font-size: 16px;
-  font-weight: bold;
-}
-.iw_content {
-  padding: 15px 15px 15px 0;
-}
+        html {
+        height: 100%;
+      }
+        body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        width: 100%;
+        display: flex;
+      }
+      #map-canvas-left, #map-canvas-right {
+        height: 250px;
+        width: 550px;
+      }
+      #iw_container .iw_title {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .iw_content {
+        padding: 15px 15px 15px 0;
+      }
     </style>
   </head>
 
   <body>
-  <nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="">Event map</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="/">Home</a></li>
-      <li><a href="/events/new">New events</a></li>
-      <li><a href=" /categories/new">Category</a></li>
-    </ul>
-  </div>
-</nav>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+          <% if user_signed_in? %>
+          <div class="navbar-text pull-right">
+            Logged in as <strong class="text-primary"><%= current_user.email %></strong>&nbsp;&nbsp;&nbsp;&nbsp;
+            <%= link_to 'Edit Profile', edit_user_registration_path %> &nbsp;&nbsp;&nbsp;&nbsp;
+            <%= link_to 'Logout',   destroy_user_session_path %> 
+          </div>
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/events/new">New events</a></li>
+                <li><a href=" /categories/new">Category</a></li>
+                <li><a href="#">Admin</a></li>
+              </ul>
+          <%  else  %>
+            <%= link_to "Sign up", new_user_registration_path, :class=>'navbar-link' %> |
+            <%= link_to "Login", new_user_session_path, :class=>'navbar-link' %>
+          <%  end %>
+        </div>
+    </nav>
   
-<div class="container">
-</div>
-    
-    
-
-    
+  <div class="container"></div>
     <%= yield %>
   </body>
 </html>

@@ -7,6 +7,15 @@ class EventsController < ApplicationController
 
   # GET /events
   # GET /events.json
+
+  # => Events direction details GET /events/:id/allevent_details
+  
+  def allevent_details
+     @event_details = Event.find(params[:id])
+     @map_data = [[ @event_details.title,  @event_details.latitude, @event_details.longitude, @event_details.description, @event_details.city, @event_details.state, @event_details.id]]
+
+  end
+  
   def index
     if params[:search].present?
       @events = Event.where("lower(title) LIKE :prefix OR lower(address) LIKE :prefix", prefix: "%#{params[:search].downcase}%").paginate(page: params[:page], per_page: 2)
@@ -15,12 +24,11 @@ class EventsController < ApplicationController
     else
       @events = Event.all.paginate(page: params[:page], per_page: 2)
     end
-    
-    @map_data = @events.map{|e| [ e.title,  e.latitude, e.longitude, e.description, e.city, e.state]}
+      @map_data = @events.map{|e| [ e.title,  e.latitude, e.longitude, e.description, e.city, e.state, e.id]}
       
-    @upcoming_events = Event.where("start_date > ?",  DateTime.now).paginate(page: params[:page], per_page: 2)
-    @expired_events =  Event.where("start_date < ?",  DateTime.now).paginate(page: params[:page], per_page: 2)
-    @categories = Category.all
+      @upcoming_events = Event.where("start_date > ?",  DateTime.now).paginate(page: params[:page], per_page: 2)
+      @expired_events =  Event.where("start_date < ?",  DateTime.now).paginate(page: params[:page], per_page: 2)
+      @categories = Category.all
   end
 
   # GET /events/1

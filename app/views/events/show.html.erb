@@ -10,11 +10,11 @@
   <%= @event.description %>
 </p>
 
-<!-- <p>
-  <strong>Image:</strong>
-  <%= @event.image %>
+<p>
+  <strong>Category:</strong>
+  <%= @event.category.try(:category_name) %>
 </p>
- -->
+
 <p>
   <strong>City:</strong>
   <%= @event.city %>
