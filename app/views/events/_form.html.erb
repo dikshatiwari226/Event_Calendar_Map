@@ -3,7 +3,7 @@
 <div id="map-canvas-right"></div>
 <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
 
-<%= form_with(model: event, local: true) do |form| %>
+<%= form_with(model: event, local: true)  do |form| %>
   <% if event.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h2>
@@ -19,31 +19,32 @@
     <%= form.hidden_field :longitude, id: "location_longitude" %>
   <div class="field">
     <%= form.label :title %>
-    <%= form.text_field :title, :class=>'form-control'  %>
+    <%= form.text_field :title, :class=>'form-control', :required=> true  %>
   </div>
 
   <div class="field">
     <%= form.label :description %>
-    <%= form.text_area :description, :class=>'form-control'  %>
+    <%= form.text_area :description, :class=>'form-control' , :required=> true %>
   </div>
 
   <div class="field">
     <%= form.label :Category%>
     <%#= form.select :category_id, Category.all.map {|c| [ c.category_name]}, {promt:"Select"},:class=>'form-control'  %>
-    <%= form.collection_select :category_id, Category.all, :id, :category_name,{}, {:class=>"form-control col-md-8"} %>
+    <%= form.collection_select :category_id, Category.all, :id, 
+      :category_name, {:prompt=> "Select a category", :class=> "form-control"}, :required=> true  %>
   </div>
   <div class="field">
     <%= form.label :start_date, id: "datepicker" %>
     <%#= form.text_field :start_date, id: "datepicker" %>
-    <%= form.text_field :start_date, :class=>'form-control myDatePicker', autocomplete: :off %>
+    <%= form.text_field :start_date, :class=>'form-control myDatePicker', autocomplete: :off  , :required=> true %>
   </div>
   <div class="field">
     <%= form.label :end_date %>
     <%#= form.text_field :end_date, id: "datepicker2" %>
-    <%= form.text_field :end_date, :class=>'form-control myDatePicker', autocomplete: :off %>
+    <%= form.text_field :end_date, :class=>'form-control myDatePicker', autocomplete: :off, :required=> true %>
   </div>
   <div id="locationField">
-      <input id="autocomplete" name="event[address]" placeholder="Enter your address" />
+      <input id="autocomplete" name="event[address]" placeholder="Enter your address", required= "true"  />
   </div>
 
     <!-- Note: The address components in this sample are typical. You might need to adjust them for
