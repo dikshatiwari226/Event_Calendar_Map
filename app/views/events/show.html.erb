@@ -33,11 +33,11 @@
 </p>
 <p>
   <strong>Start_date:</strong>
-  <%= @event.start_date %>
+  <%= @event.start_date.try(:strftime, "%a, %-d %b %Y" ) %>
 </p>
 <p>
   <strong>End_date:</strong>
-  <%= @event.end_date %>
+  <%= @event.end_date.try(:strftime, "%a, %-d %b %Y" ) %>
 </p>
 <% if @event.address.present? %>
  <p>
@@ -47,8 +47,8 @@
  </p>
 <% else %>
 <% end %>
-<%= link_to 'Edit', edit_event_path(@event) %> |
-<%= link_to 'Back', events_path %>
+<%= link_to 'Edit', edit_event_path(@event), class: 'btn btn-warning'  %>&nbsp;&nbsp;
+<%= link_to 'Back', events_path , class: 'btn btn-primary'%>
 
 <style>
    #map {

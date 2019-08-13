@@ -1,9 +1,16 @@
 Rails.application.routes.draw do
+	namespace :admin, module: nil  do
+    root "admin#index"
+    resources :users
+
+  end
+
   devise_for :users
   resources :categories
   resources :events
 
-  
+   get 'admin/index'
+ 
 
   root 'events#index'
 
@@ -11,3 +18,4 @@ Rails.application.routes.draw do
   # resources :categories
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
+

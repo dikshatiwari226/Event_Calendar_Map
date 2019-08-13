@@ -24,28 +24,29 @@
 
   <div class="field">
     <%= form.label :description %>
-    <%= form.text_area :description, :class=>'form-control' , :required=> true %>
+    <%= form.text_area :description, :class=>'form-control',  :required=> true %>
   </div>
 
   <div class="field">
     <%= form.label :Category%>
     <%#= form.select :category_id, Category.all.map {|c| [ c.category_name]}, {promt:"Select"},:class=>'form-control'  %>
     <%= form.collection_select :category_id, Category.all, :id, 
-      :category_name, {:prompt=> "Select a category", :class=> "form-control"}, :required=> true  %>
+      :category_name, {:prompt=> "Select a category"}, class: 'form-control', :required=> true  %>
   </div>
   <div class="field">
-    <%= form.label :start_date, id: "datepicker" %>
+    <%= form.label :start_date %>
     <%#= form.text_field :start_date, id: "datepicker" %>
-    <%= form.text_field :start_date, :class=>'form-control myDatePicker', autocomplete: :off  , :required=> true %>
+    <%= form.text_field :start_date, :class=>'form-control datepicker', :id=>'start_date',  autocomplete: :off  , :required=> true %>
   </div>
   <div class="field">
     <%= form.label :end_date %>
     <%#= form.text_field :end_date, id: "datepicker2" %>
-    <%= form.text_field :end_date, :class=>'form-control myDatePicker', autocomplete: :off, :required=> true %>
+    <%= form.text_field :end_date, :class=>'form-control datepicker',:id=>'end_date', autocomplete: :off, :required=> true %>
   </div>
   <div id="locationField">
       <input id="autocomplete" name="event[address]" placeholder="Enter your address", required= "true"  />
   </div>
+
 
     <!-- Note: The address components in this sample are typical. You might need to adjust them for
                the locations relevant to your app. For more information, see
@@ -91,7 +92,7 @@
 
     </table>
 
-  <div class="actions">
+  <div class="actions text-center">
     <%= form.submit %>
   </div>
 <% end %>
@@ -104,41 +105,31 @@
 
 
 <script type="text/javascript">
-$("#autocomplete").geocomplete()
-          .bind("geocode:result", function(event, result){
-            b = result
-            a = result.address_components
-            for ( var i = 0, l = a.length; i < l; i++ ) {
-                if (a[i].types.indexOf('administrative_area_level_2') > -1)
-                {
-                  $('#locality').val(a[i].long_name)
-                }
-                if (a[i].types.indexOf("country") > -1)
-                {
-                  $('#address_line').val(a[i].long_name)
-                }
-                if (a[i].types.indexOf("postal_code") > -1)
-                {
-                  $('#zipcode').val(a[i].long_name)
-                }
-                if (a[i].types.indexOf('administrative_area_level_1') > -1)
-                {
-                  $('#state').val(a[i].long_name)
-                }
-            }
-
-            console.log("Data", result);
-            // $("#state").val(a[3].long_name)
-            $("#location_latitude").val(result.geometry.viewport.na.j)
-            $("#location_longitude").val(result.geometry.viewport.ga.l)
-
-
-          });
-          // *
-// * Two maps on the same page
-// * 2015 - en.marnoto.com
-// *
-
+  $("#autocomplete").geocomplete().bind("geocode:result", function(event, result){
+    b = result
+    a = result.address_components
+    for ( var i = 0, l = a.length; i < l; i++ ) {
+        if (a[i].types.indexOf('administrative_area_level_2') > -1)
+        {
+          $('#locality').val(a[i].long_name)
+        }
+        if (a[i].types.indexOf("country") > -1)
+        {
+          $('#address_line').val(a[i].long_name)
+        }
+        if (a[i].types.indexOf("postal_code") > -1)
+        {
+          $('#zipcode').val(a[i].long_name)
+        }
+        if (a[i].types.indexOf('administrative_area_level_1') > -1)
+        {
+          $('#state').val(a[i].long_name)
+        }
+    }
+      console.log("Data", result);
+      $("#location_latitude").val(result.geometry.viewport.na.j)
+      $("#location_longitude").val(result.geometry.viewport.ga.l)
+  });
 // necessary variables
 var mapLeft, mapRight;
 var infoWindowLeft, infoWindowRight;
@@ -171,59 +162,55 @@ var markersDataLeft = [
    } // don't insert comma in the last item
 ];
 
-
-
 function initialize(setMap) {
-
-   var mapOptions;
+  var mapOptions;
+    if(setMap == "mapLeft") {
+          mapOptions = {
+          center: new google.maps.LatLng(28.7041,77.1025),
+          zoom: 11,
+          mapTypeId: 'roadmap',
+        };
    
-   if(setMap == "mapLeft") {
-      mapOptions = {
-         center: new google.maps.LatLng(28.7041,77.1025),
-         zoom: 11,
-         mapTypeId: 'roadmap',
-      };
-   
-      mapLeft = new google.maps.Map(document.getElementById('map-canvas-left'), mapOptions);
+        mapLeft = new google.maps.Map(document.getElementById('map-canvas-left'), mapOptions);
       
-     // a new Info Window is created
-     infoWindowLeft = new google.maps.InfoWindow();
+       // a new Info Window is created
+        infoWindowLeft = new google.maps.InfoWindow();
   
-     // Event that closes the Info Window with a click on the map
-     google.maps.event.addListener(mapLeft, 'click', function() {
-        infoWindowLeft.close();
-    });
+      // Event that closes the Info Window with a click on the map
+        google.maps.event.addListener(mapLeft, 'click', function() {
+          infoWindowLeft.close();
+        });
       
-   } else {
-      
-      mapOptions = {
-         center: new google.maps.LatLng(28.7041,77.1025),
-         zoom: 9,
-         mapTypeId: 'roadmap',
+    } 
+    else {
+          
+        mapOptions = {
+        center: new google.maps.LatLng(28.7041,77.1025),
+        zoom: 9,
+        mapTypeId: 'roadmap',
       };
       
-     mapRight = new google.maps.Map(document.getElementById('map-canvas-right'), mapOptions);
+        mapRight = new google.maps.Map(document.getElementById('map-canvas-right'), mapOptions);
       
-     // a new Info Window is created
-     infoWindowRight = new google.maps.InfoWindow();
+       // a new Info Window is created
+       infoWindowRight = new google.maps.InfoWindow();
   
-     // Event that closes the Info Window with a click on the map
-     google.maps.event.addListener(mapRight, 'click', function() {
-        infoWindowRight.close();
-    });
-   }
+       // Event that closes the Info Window with a click on the map
+       google.maps.event.addListener(mapRight, 'click', function() {
+          infoWindowRight.close();
+      });
+    }
 
-   // Finally displayMarkers() function is called to begin the markers creation
-   displayMarkers(setMap);
+     // Finally displayMarkers() function is called to begin the markers creation
+     displayMarkers(setMap);
    
    // Create second map only when initialize function is called for the first time.
    // Second time setMap is equal to mapRight, so this condition returns false and it will not run  
-   if(setMap == "mapLeft"){
+    if(setMap == "mapLeft"){
       initialize("mapRight");   
    }
-   
 }
-google.maps.event.addDomListener(window, 'load', function(){ initialize("mapLeft") });
+    google.maps.event.addDomListener(window, 'load', function(){ initialize("mapLeft") });
 
 
 // This function will iterate over markersData array
@@ -263,50 +250,62 @@ function displayMarkers(setMap){
 
 // This function creates each marker and it sets their Info Window content
 function createMarker(setMap, latlng, name, address1, address2, postalCode){
+     var map;
+     var infoWindow;
    
-   var map;
-   var infoWindow;
+     if(setMap == "mapLeft"){
+        map = mapLeft;
+        infoWindow = infoWindowLeft;
+     } else {
+        map = mapRight;
+        infoWindow = infoWindowRight;
+     }
    
-   if(setMap == "mapLeft"){
-      map = mapLeft;
-      infoWindow = infoWindowLeft;
-   } else {
-      map = mapRight;
-      infoWindow = infoWindowRight;
-   }
-   
-   var marker = new google.maps.Marker({
-      map: map,
-      position: latlng,
-      title: name
-   });
+     var marker = new google.maps.Marker({
+        map: map,
+        position: latlng,
+        title: name
+     });
 
    // This event expects a click on a marker
    // When this event is fired the Info Window content is created
    // and the Info Window is opened.
-   google.maps.event.addListener(marker, 'click', function() {
+    google.maps.event.addListener(marker, 'click', function() {
       
       // Creating the content to be inserted in the infowindow
       var iwContent = '<div id="iw_container">' +
             '<div class="iw_title">' + name + '</div>' +
-         '<div class="iw_content">' + address1 + '<br />' +
-         address2 + '<br />' +
-         postalCode + '</div></div>';
+            '<div class="iw_content">' + address1 + '<br />' + address2 + '<br />' +postalCode + '</div></div>';
       
-      // including content to the Info Window.
-      infoWindow.setContent(iwContent);
+        // including content to the Info Window.
+        infoWindow.setContent(iwContent);
 
-      // opening the Info Window in the current map and at the current marker location.
-      infoWindow.open(map, marker);
+        // opening the Info Window in the current map and at the current marker location.
+        infoWindow.open(map, marker);
    });
 }
 
 </script>
+
+<!-- Start_Date & End_Date Validation  -->
+
 <script type="text/javascript">
-   $(document).ready(function(){
-      $('.myDatePicker').datepicker({
-        format: 'yyyy/mm/dd',
-        autoclose: true
-      });
+  $(document).ready(function(){
+    $(".datepicker").datepicker({
+      format: 'dd M yyyy',          // 12 Aug 2019 print date this format
+      autoclose: true
+    }).on("changeDate", function (e) {
+      var start_date = $("#start_date").val(); 
+      var end_date = $("#end_date").val();  // get a string format date
+
+      if (start_date != "" && end_date != ""){
+          start_date = new Date(start_date);
+          end_date = new Date(end_date); // convert string date to date format 
+          if (end_date < start_date){
+            alert("End date should be greater or equal to start Date");
+            $(this).val("");   
+          }
+      }
     });
+  });
 </script>
